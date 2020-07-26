@@ -2,7 +2,10 @@ package com.example.demoapp2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -79,6 +82,28 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+
+        menuInflater.inflate(R.menu.settingsmenu, menu)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.action_exit -> {
+                Toast.makeText(baseContext, "Выход", Toast.LENGTH_SHORT).show()
+                logout()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun logout(){
+        println("Выход")
+        auth.signOut()
+        updateUI(null)
+    }
 
     private fun updateUI(user: FirebaseUser?) {
 
@@ -89,10 +114,15 @@ class MainActivity : AppCompatActivity() {
             listPage?.isEnabled = true
 
 
+
         } else {
 
             val listPage = toolbar.menu.findItem(R.id.listPage)
             listPage?.isEnabled = false
+
+            //ссылка на навигационный контроллер
+            val navController = findNavController(R.id.nav_fragment)
+            navController.navigate(R.id.authPage)
 
         }
     }

@@ -157,6 +157,11 @@ class AuthPage : Fragment() {
 
     private fun updateUI(user: FirebaseUser?) {
         fragmentlayout!!.progressBar?.visibility = View.GONE
+        if (user != null) {
+            //ссылка на навигационный контроллер
+            val navController = NavHostFragment.findNavController(this)
+            navController.navigate(R.id.listPage)
+        }
     }
 
     companion object {

@@ -14,7 +14,9 @@
 
         <item android:title="@string/menu_bd_list"
             android:id="@+id/listPage"
-            android:enabled="false"/>
+            />
+
+
     </group>
 
 </menu>

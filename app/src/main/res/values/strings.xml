@@ -4,10 +4,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="btn_nav_auth">Авторизация</string>
     <string name="btn_nav_list">Список БД</string>
-    <string name="settings">Настройки</string>
+    <string name="exit">Выход</string>
     <string name="menu_auth">Авторизация</string>
     <string name="menu_sorter">Сортировщик</string>
     <string name="menu_bd_list">Список из БД</string>
+
     <string name="et_sorter_hint">Введите числа через пробел</string>
     <string name="btn_sorter_label">Сортировка</string>
     <string name="tv_sort_result">По возрастанию %1$s</string>
