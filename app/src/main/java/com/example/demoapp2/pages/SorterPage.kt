@@ -15,10 +15,6 @@ import java.util.*
 class SorterPage : Fragment() {
 
 
-    companion object {
-
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -118,6 +114,10 @@ class SorterPage : Fragment() {
 
     }
 
+
+    companion object {
+        private  val TAG = "DemoApp"
+    }
 
 
 }

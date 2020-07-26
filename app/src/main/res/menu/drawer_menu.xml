@@ -6,13 +6,15 @@
 
     <group android:checkableBehavior="single">
         <item android:title="@string/menu_auth"
-            android:id="@+id/authPage"/>
+            android:id="@+id/authPage"
+            />
 
         <item android:title="@string/menu_sorter"
             android:id="@+id/sorterPage" />
 
         <item android:title="@string/menu_bd_list"
-            android:id="@+id/listPage" />
+            android:id="@+id/listPage"
+            android:enabled="false"/>
     </group>
 
 </menu>

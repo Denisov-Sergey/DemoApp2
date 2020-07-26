@@ -12,8 +12,8 @@
     <string name="btn_sorter_label">Сортировка</string>
     <string name="tv_sort_result">По возрастанию %1$s</string>
     <string name="tv_sort_result_desc">По убыванию %1$s</string>
-    <string name="et_passws">Пароль</string>
+    <string name="et_password">Пароль</string>
     <string name="ed_mail">E-mail</string>
-    <string name="btn_login_label">Аворизация</string>
+    <string name="btn_login_label">Авторизация</string>
     <string name="btn_register_label">Регистрация</string>
 </resources>

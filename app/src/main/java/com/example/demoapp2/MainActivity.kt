@@ -2,6 +2,7 @@ package com.example.demoapp2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -12,15 +13,25 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.fragment_auth_page.*
+import kotlinx.android.synthetic.main.fragment_auth_page.view.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        //инициализация авторизации
+        auth = FirebaseAuth.getInstance()
 
         //получить ссылку на navController
         //val host: NavHostFragment = supportFragmentManager.findFragmentById(R.id.nav_fragment) as NavHostFragment? ?:return
@@ -51,12 +62,40 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        //получаем авторизованного или нет юзера
+        val currentUser: FirebaseUser? = auth.currentUser
+        updateUI(currentUser)
+
+    }
+
+
     //собственно активатор меню бокового
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+
+
+    private fun updateUI(user: FirebaseUser?) {
+
+        progressBar?.visibility = View.GONE
+        if (user != null) {
+
+            val listPage = toolbar.menu.findItem(R.id.listPage)
+            listPage?.isEnabled = true
+
+
+        } else {
+
+            val listPage = toolbar.menu.findItem(R.id.listPage)
+            listPage?.isEnabled = false
+
+        }
+    }
 
 
 }
