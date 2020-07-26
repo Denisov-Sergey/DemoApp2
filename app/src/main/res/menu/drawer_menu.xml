@@ -5,9 +5,13 @@
     tools:context=".MainActivity" >
 
     <group android:checkableBehavior="single">
-        <item android:title="Авторизация"
+        <item android:title="@string/menu_auth"
             android:id="@+id/authPage"/>
-        <item android:title="Список из БД"
+
+        <item android:title="@string/menu_sorter"
+            android:id="@+id/sorterPage" />
+
+        <item android:title="@string/menu_bd_list"
             android:id="@+id/listPage" />
     </group>
 
