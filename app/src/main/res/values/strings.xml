@@ -17,4 +17,6 @@
     <string name="ed_mail">E-mail</string>
     <string name="btn_login_label">Авторизация</string>
     <string name="btn_register_label">Регистрация</string>
+    <string name="save">Сохранить</string>
+    <string name="ed_save">Текст для БД</string>
 </resources>

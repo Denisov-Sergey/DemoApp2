@@ -1,60 +1,115 @@
 package com.example.demoapp2.pages
 
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.demoapp2.R
+import com.example.demoapp2.data.Post
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.fragment_list_page.view.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ListPage.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ListPage : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+
+    private lateinit var auth: FirebaseAuth
+    private var database: FirebaseDatabase? = null
+    private var referencedatabase: DatabaseReference? = null
+    private var fragmentlayout: View? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
+        referencedatabase = FirebaseDatabase.getInstance().getReference()
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list_page, container, false)
+
+        // ссылка на макет фрагмента
+        fragmentlayout =  inflater.inflate(R.layout.fragment_list_page, container, false)
+
+
+        //получаем авторизованного или нет юзера
+        val currentUser: FirebaseUser? = auth.currentUser
+
+
+        fragmentlayout!!.btn_save_bd.setOnClickListener {
+            if (currentUser != null) {
+                saveBD(fragmentlayout!!.ed_save_bd.text.toString(), currentUser.uid)
+            }
+        }
+
+        return  fragmentlayout
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ListPage.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ListPage().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun saveBD(post: String, uid: String){
+
+        if (TextUtils.isEmpty(post)) {
+            fragmentlayout!!.ed_save_bd.error = "Обязательное"
+            return
+        }
+
+        Toast.makeText(
+            getActivity()?.getBaseContext(), "Отправка...", Toast.LENGTH_SHORT).show()
+
+        referencedatabase!!.child("users").child(uid).addListenerForSingleValueEvent(
+            object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    writeNewPost(uid, post)
+
                 }
-            }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+
+                }
+            })
+
+
+    }
+
+
+
+
+    private fun writeNewPost(userId: String, body: String) {
+
+        val key = referencedatabase!!.child(userId).push().key
+        if (key == null) {
+            Log.w(TAG, "Не найдена коллекция $userId ")
+            return
+        }
+
+        //database!!.child("Messages").child(userId).setValue(body)
+        val post = Post(userId, body)
+        val postValues = post.toMap()
+
+        val childUpdates = hashMapOf<String, Any>(
+            "/Messages/$key" to postValues,
+            "/user-Messages/$userId/$key" to postValues
+        )
+
+        referencedatabase!!.updateChildren(childUpdates)
+
+
+    }
+
+
+    companion object {
+        private  val TAG = "DemoApp"
     }
 }
