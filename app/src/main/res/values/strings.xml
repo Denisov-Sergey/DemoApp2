@@ -9,7 +9,11 @@
     <string name="menu_sorter">Сортировщик</string>
     <string name="menu_bd_list">Список из БД</string>
     <string name="et_sorter_hint">Введите числа через пробел</string>
-    <string name="btn_sorter_label">Сортировка по возрастанию</string>
+    <string name="btn_sorter_label">Сортировка</string>
     <string name="tv_sort_result">По возрастанию %1$s</string>
     <string name="tv_sort_result_desc">По убыванию %1$s</string>
+    <string name="et_passws">Пароль</string>
+    <string name="ed_mail">E-mail</string>
+    <string name="btn_login_label">Аворизация</string>
+    <string name="btn_register_label">Регистрация</string>
 </resources>
