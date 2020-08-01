@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:ems="10"
-        android:hint="@string/et_sorter_hint"/>
+        android:hint="@string/et_sorter_hint"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/btn_sorter"

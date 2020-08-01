@@ -17,8 +17,8 @@
             android:id="@+id/action_authPage_to_sorterPage"
             app:destination="@id/sorterPage" />
         <action
-            android:id="@+id/action_authPage_to_logout"
-            app:destination="@id/logout" />
+            android:id="@+id/action_authPage_to_gridPage"
+            app:destination="@id/gridPage" />
     </fragment>
     <fragment
         android:id="@+id/listPage"
@@ -30,9 +30,9 @@
         android:name="com.example.demoapp2.pages.SorterPage"
         android:label="@string/menu_sorter"
         tools:layout="@layout/fragment_sorter_page" />
-    <fragment
-        android:id="@+id/logout"
-        android:name="com.example.demoapp2.pages.logout"
-        android:label="fragment_logout"
-        tools:layout="@layout/fragment_logout" />
+        <fragment
+        android:id="@+id/gridPage"
+        android:name="com.example.demoapp2.pages.GridPage"
+        android:label="Галлерея"
+        tools:layout="@layout/fragment_grid_page" />
 </navigation>

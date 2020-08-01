@@ -16,6 +16,9 @@
             android:id="@+id/listPage"
             />
 
+        <item android:title="@string/menu_gallery"
+            android:id="@+id/gridPage"
+            />
 
     </group>
 

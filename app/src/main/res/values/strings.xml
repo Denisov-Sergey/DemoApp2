@@ -23,4 +23,6 @@
     <string name="et_ud">Новый Текст</string>
     <string name="btn_update">Обновить</string>
     <string name="btn_ud_delete">Удалить</string>
+    <string name="menu_gallery">Галлерея</string>
+    <string name="tv_gallery">Галлерея</string>
 </resources>

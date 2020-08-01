@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".pages.GridPage">
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
+
+        <!--<TextView
+            android:id="@+id/tv_pivGrid"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:gravity="center"
+            android:text="@string/tv_gallery"
+            android:textSize="21sp"
+            android:textStyle="bold" />-->
+
+        <GridView
+            android:id="@+id/pic_grid"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:horizontalSpacing="0.5dp"
+            android:numColumns="auto_fit"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="0dp">
+
+        </GridView>
+
+    </RelativeLayout>
+
+
+
+</FrameLayout>

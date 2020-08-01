@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout) //можно не указывать я указал сразу в определении конфига ниже
         //пункты меню связываются в конфиг бутера, указываем drawerLayout как название файла меню
         appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.authPage, R.id.listPage, R.id.sorterPage), drawerLayout = findViewById(R.id.drawer_layout))
+            R.id.authPage, R.id.listPage, R.id.sorterPage, R.id.gridPage), drawerLayout = findViewById(R.id.drawer_layout))
         //премениение конфига меню к боковому меню
         setupActionBarWithNavController(navController, appBarConfiguration)
         sideBar.setupWithNavController(navController)
