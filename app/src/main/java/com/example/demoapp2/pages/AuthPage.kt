@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.demoapp2.MainActivity
 import com.example.demoapp2.R
 import com.google.android.gms.tasks.Task
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -155,9 +156,19 @@ class AuthPage : Fragment() {
         return valid
     }
 
+    //это костыль т.к он повторет то что есть в MainActivity для этого надо сделать отдельный класс и к нему обращаться со всех activity
     private fun updateUI(user: FirebaseUser?) {
         fragmentlayout!!.progressBar?.visibility = View.GONE
+
+        /*val factory  : LayoutInflater = layoutInflater
+        val maincativity = factory.inflate(R.layout.activity_main, null)*/
+        val sidebar = (context as MainActivity).findViewById<NavigationView>(R.id.nav_view)
+
         if (user != null) {
+
+
+            sidebar.menu.findItem(R.id.authPage).isVisible = false
+            sidebar.menu.findItem(R.id.listPage).isVisible = true
             //ссылка на навигационный контроллер
             val navController = NavHostFragment.findNavController(this)
             navController.navigate(R.id.listPage)

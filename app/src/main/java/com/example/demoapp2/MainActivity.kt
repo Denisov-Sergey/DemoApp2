@@ -108,21 +108,30 @@ class MainActivity : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
 
         progressBar?.visibility = View.GONE
+
+        val sidebar = findViewById<NavigationView>(R.id.nav_view)
+
         if (user != null) {
 
-            val listPage = toolbar.menu.findItem(R.id.listPage)
-            listPage?.isEnabled = true
 
+            /*val listPage = toolbar.menu.findItem(R.id.listPage)
+            listPage?.isEnabled = true*/
+
+            sidebar.menu.findItem(R.id.authPage).isVisible = false
 
 
         } else {
+            sidebar.menu.findItem(R.id.authPage).isVisible = true
+            sidebar.menu.findItem(R.id.listPage).isVisible = false
 
-            val listPage = toolbar.menu.findItem(R.id.listPage)
-            listPage?.isEnabled = false
+            /*val listPage = toolbar.menu.findItem(R.id.listPage)
+            listPage?.isEnabled = false*/
 
             //ссылка на навигационный контроллер
             val navController = findNavController(R.id.nav_fragment)
             navController.navigate(R.id.authPage)
+
+
 
         }
     }
