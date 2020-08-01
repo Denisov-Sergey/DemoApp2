@@ -19,4 +19,8 @@
     <string name="btn_register_label">Регистрация</string>
     <string name="save">Сохранить</string>
     <string name="ed_save">Текст для БД</string>
+    <string name="btn_delete">X</string>
+    <string name="et_ud">Новый Текст</string>
+    <string name="btn_update">Обновить</string>
+    <string name="btn_ud_delete">Удалить</string>
 </resources>

@@ -1,14 +1,13 @@
 package com.example.demoapp2.pages
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.demoapp2.R
 import com.example.demoapp2.data.MessageAdapter
@@ -29,6 +28,7 @@ class ListPage : Fragment() {
 
     lateinit var listView: ListView
     private var messagelist: MutableList<String>? = null
+    private var keylist: MutableList<String>? = null
     var arrayAdapter: MessageAdapter? = null
 
 
@@ -78,13 +78,15 @@ class ListPage : Fragment() {
 
 
         if (currentUser != null) {
-        fragmentlayout!!.btn_save_bd.setOnClickListener {
-                saveBD(fragmentlayout!!.ed_save_bd.text.toString(), currentUser.uid)
 
-        }
+            //кнопки
+            fragmentlayout!!.btn_save_bd.setOnClickListener {
+                saveBD(fragmentlayout!!.ed_save_bd.text.toString(), currentUser.uid)
+            }
 
             //load db data
             messagelist = mutableListOf()   //тип дпнныъ массив MutableList типа Strinf
+            keylist = mutableListOf()
 
             //найти лист вью и создать для него адаптер
             listView = fragmentlayout!!.findViewById(R.id.bd_list_view)
@@ -105,8 +107,18 @@ class ListPage : Fragment() {
                         //данные хранятся в подветках - childreb
                     for (i in dataSnapshot.children){
                         //там есть uid  и message взять значение как строку
+                        //DataSnapshot { key = -MDdXMWhqkdzB2dPMJ-p, value = {uid=SMuHVPgGD2RckMtuYP7ahVJzp6b2, message=test32} }
                         val message : String? = i.child("message").getValue(String::class.java)
+                        val key : String? = i.key
                         messagelist!!.add(message.toString())
+                        keylist!!.add(key.toString())
+                        //Log.d(TAG, "$i")
+                        //Log.d(TAG, "$key")
+                        //Log.d(TAG, "$keylist")
+                        //Log.d(TAG, "$dataSnapshot")
+
+
+                        //Toast.makeText(getActivity()?.getBaseContext(), "$i ", Toast.LENGTH_LONG).show()
                         //Toast.makeText(getActivity()?.getBaseContext(), "$message ", Toast.LENGTH_LONG).show()
                     }
                     //ссобщить нашему адаптеру что он изменился
@@ -115,6 +127,23 @@ class ListPage : Fragment() {
             }
             ref.addListenerForSingleValueEvent(messageListener)
 
+            //клики по списку
+            /*listView.setOnItemLongClickListener {
+                adapterView, view, i, l ->
+
+            }*/
+
+
+
+            listView.setOnItemClickListener { parent, view, position, id  ->
+                val msg = messagelist!![position]
+                val key : String = keylist!![position]
+                //println(keylist)
+                //println("$parent, $view, $position, $id")
+
+                showUpdateDialog(key, msg, currentUser.uid, position)
+
+            }
 
         }
 
@@ -122,6 +151,70 @@ class ListPage : Fragment() {
 
     }
 
+    private fun showUpdateDialog(
+        messageId: String,
+        messageText: String,
+        uid: String,
+        position: Int
+    ){
+        val  dialogBuilder = AlertDialog.Builder(getActivity())
+        val layoutInflater: LayoutInflater = layoutInflater
+        val dialogView: View = layoutInflater.inflate(R.layout.update_dialog, null)
+        //кнопки вслывашки
+        val et_ud = dialogView.findViewById<EditText>(R.id.et_ud_message)
+        val btn_upd = dialogView.findViewById<Button>(R.id.btn_ut_update)
+        val btn_delete = dialogView.findViewById<Button>(R.id.btn_ut_delete)
+        //
+
+        dialogBuilder.setView(dialogView)
+        dialogBuilder.setTitle("Обновить $messageText")
+
+        //
+        val alertdialog: AlertDialog = dialogBuilder.create()
+
+        //наполнение елементами
+        et_ud.setText(messageText)
+        btn_delete.setOnClickListener {
+            deleteMessage(messageId, messageText, uid)
+            //обновить массив
+            messagelist!!.removeAt(position)
+            keylist!!.removeAt(position)
+            arrayAdapter!!.notifyDataSetChanged()
+
+            alertdialog.dismiss()
+        }
+
+        btn_upd.setOnClickListener {
+            updateMessage(messageId, et_ud.text.toString(), uid)
+            //обновить массив адаптера
+            messagelist!![position] = et_ud.text.toString()
+            arrayAdapter!!.notifyDataSetChanged();
+
+            alertdialog.dismiss()
+        }
+
+        alertdialog.show()
+    }
+
+    private fun updateMessage(messageId: String, messageText: String, uid: String) {
+
+        database!!.getReference("Messages").child(messageId).child("message").setValue(messageText)
+        database!!.getReference("user-Messages").child(uid).child(messageId).child("message").setValue(messageText)
+
+        Toast.makeText(activity?.baseContext, "Обновлено  $messageText", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun deleteMessage(messageId: String, messageText: String, uid: String) {
+
+        database!!.getReference("Messages").child(messageId).removeValue()
+        database!!.getReference("user-Messages").child(uid).child(messageId).removeValue()
+
+        Toast.makeText(activity?.baseContext, "Удалено $messageText", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun deleteBD(uid: String) {
+        TODO("Not yet implemented")
+    }
 
 
     private fun saveBD(post: String, uid: String){
@@ -140,7 +233,8 @@ class ListPage : Fragment() {
                     writeNewPost(uid, post)
 
                     messagelist!!.add(post)
-                    //Toast.makeText(getActivity()?.getBaseContext(), "$message ", Toast.LENGTH_LONG).show()
+
+                    //Toast.makeText(getActivity()?.getBaseContext(), "$dataSnapshot ", Toast.LENGTH_LONG).show()
                     arrayAdapter?.notifyDataSetChanged();
                 }
 
@@ -172,6 +266,7 @@ class ListPage : Fragment() {
             "/user-Messages/$userId/$key" to postValues
         )
 
+        keylist!!.add(key)
         referencedatabase!!.updateChildren(childUpdates)
 
 
