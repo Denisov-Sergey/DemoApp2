@@ -28,4 +28,5 @@
     <string name="menu_gallery_modelu">Модуль галлеря</string>
     <string name="menu_galley">Галлерея</string>
     <string name="btn_upload_label">Загрузить картинку</string>
+    <string name="back_btn">Назад</string>
 </resources>

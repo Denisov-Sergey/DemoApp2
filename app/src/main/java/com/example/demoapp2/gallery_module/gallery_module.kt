@@ -17,10 +17,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.GridView
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import com.example.demoapp2.MainActivity
 import com.example.demoapp2.R
@@ -33,6 +30,7 @@ import kotlinx.android.synthetic.main.fragment_gallery_module.*
 import kotlinx.android.synthetic.main.fragment_gallery_module.view.*
 import java.io.ByteArrayOutputStream
 import java.util.*
+import java.util.zip.Inflater
 
 
 class gallery_module : Fragment() {
@@ -72,6 +70,20 @@ class gallery_module : Fragment() {
         galleryAdapter = GalleryModuleAdapter( getActivity()!!.applicationContext, R.layout.module_grid, imageArray!! )
 
         fragmentLayout!!.findViewById<GridView>(R.id.grid_moduleGallery).adapter = galleryAdapter
+
+        fragmentLayout!!.findViewById<GridView>(R.id.grid_moduleGallery).onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, selected ->
+                Toast.makeText(activity?.baseContext, "Картинка  $position", Toast.LENGTH_SHORT ).show()
+
+                val intent = Intent(this.activity, detailImage::class.java)
+                //перед передачей сжать биточки передавать можно интеном только 1м
+                val stream = ByteArrayOutputStream()
+                imageArray!![position].compress(Bitmap.CompressFormat.JPEG, 100 ,stream)
+                val byteArray = stream.toByteArray()
+                //
+                intent.putExtra(detailImage.IINTENT_BYTEARRAY, byteArray)
+                startActivity(intent)
+            }
         //
 
         fragmentLayout!!.findViewById<ProgressBar>(R.id.pb_imgLoad).visibility = View.GONE

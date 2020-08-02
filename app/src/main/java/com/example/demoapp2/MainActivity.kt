@@ -77,6 +77,13 @@ class MainActivity : AppCompatActivity() {
         val currentUser: FirebaseUser? = auth.currentUser
         updateUI(currentUser)
 
+        //костыль кнопки назад пока что так
+        val isToGallery = intent.getIntExtra("ToGallery", 0)
+        if (isToGallery != null && isToGallery > 0){
+            val navController = findNavController(R.id.nav_fragment)
+            navController.navigate(R.id.gallery_module)
+        }
+
     }
 
 
