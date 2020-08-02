@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_authPage_to_gridPage"
             app:destination="@id/gridPage" />
+        <action
+            android:id="@+id/action_authPage_to_gallery_module"
+            app:destination="@id/gallery_module" />
     </fragment>
     <fragment
         android:id="@+id/listPage"
@@ -33,6 +36,11 @@
         <fragment
         android:id="@+id/gridPage"
         android:name="com.example.demoapp2.pages.GridPage"
-        android:label="Галлерея"
+        android:label="@string/menu_galley"
         tools:layout="@layout/fragment_grid_page" />
+    <fragment
+        android:id="@+id/gallery_module"
+        android:name="com.example.demoapp2.gallery_module.gallery_module"
+        android:label="@string/menu_gallery_modelu"
+        tools:layout="@layout/fragment_gallery_module" />
 </navigation>

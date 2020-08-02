@@ -1,13 +1,17 @@
 package com.example.demoapp2
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -15,6 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.demoapp2.gallery_module.gallery_module
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -53,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout) //можно не указывать я указал сразу в определении конфига ниже
         //пункты меню связываются в конфиг бутера, указываем drawerLayout как название файла меню
         appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.authPage, R.id.listPage, R.id.sorterPage, R.id.gridPage), drawerLayout = findViewById(R.id.drawer_layout))
+            R.id.authPage, R.id.listPage, R.id.sorterPage, R.id.gridPage, R.id.gallery_module), drawerLayout = findViewById(R.id.drawer_layout))
         //премениение конфига меню к боковому меню
         setupActionBarWithNavController(navController, appBarConfiguration)
         sideBar.setupWithNavController(navController)
@@ -120,9 +125,15 @@ class MainActivity : AppCompatActivity() {
             sidebar.menu.findItem(R.id.authPage).isVisible = false
 
 
+            sidebar.menu.findItem(R.id.listPage).isVisible = true
+            sidebar.menu.findItem(R.id.gallery_module).isVisible = true
+
+
         } else {
             sidebar.menu.findItem(R.id.authPage).isVisible = true
+
             sidebar.menu.findItem(R.id.listPage).isVisible = false
+            sidebar.menu.findItem(R.id.gallery_module).isVisible = false
 
             /*val listPage = toolbar.menu.findItem(R.id.listPage)
             listPage?.isEnabled = false*/
@@ -136,5 +147,48 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        val gallery_module  = supportFragmentManager.fragments[R.id.gallery_module]
+        gallery_module.onActivityResult(requestCode, resultCode, data)
+
+
+        super.onActivityResult(requestCode, resultCode, data)
+    }*/
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d(TAG, "onActivityResult(requestCode = $requestCode, resultCode = $resultCode)")
+        if (resultCode == Activity.RESULT_OK) {
+            //сначала коды для этого активити тут просто заглушка = 1 , фотки с кодом 0 прииходят
+            when (requestCode) {
+                1 -> {
+                    Log.e(TAG, "onActivityResult: $requestCode")
+                }
+                else -> {
+                    // Если ожидаемые коды не подходят — пытаемся определить дочерний Фрагмент,
+                    // инициировавший происходящие события. requestCode в старших разрядах содержит индекс:
+                    val fragmentIndex = requestCode.shr(16)
+                    if (fragmentIndex>0) {
+                        // Надо передать дочернему фрагменту
+                        val fragments = supportFragmentManager.fragments
+                        if (fragmentIndex>fragments.size)
+                            Log.e(TAG, "onActivityResult: wrong request code!")
+                        else {
+                            Log.i(TAG, "onActivityResult: transfer result to fragment.")
+                            fragments[fragmentIndex-1].onActivityResult(
+                                requestCode.and(0xFFFF),
+                                resultCode, data)
+                        }
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    companion object{
+        val TAG = "DemoApp"
+    }
 
 }

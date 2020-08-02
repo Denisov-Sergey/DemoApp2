@@ -20,6 +20,11 @@
             android:id="@+id/gridPage"
             />
 
+        <item
+            android:id="@+id/gallery_module"
+            android:icon="@android:drawable/ic_dialog_dialer"
+            android:title="@string/menu_gallery_modelu" />
     </group>
+
 
 </menu>

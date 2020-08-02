@@ -7,7 +7,7 @@
     <string name="exit">Выход</string>
     <string name="menu_auth">Авторизация</string>
     <string name="menu_sorter">Сортировщик</string>
-    <string name="menu_bd_list">Список из БД</string>
+    <string name="menu_bd_list">Заметки</string>
 
     <string name="et_sorter_hint">Введите числа через пробел</string>
     <string name="btn_sorter_label">Сортировка</string>
@@ -25,4 +25,7 @@
     <string name="btn_ud_delete">Удалить</string>
     <string name="menu_gallery">Галлерея</string>
     <string name="tv_gallery">Галлерея</string>
+    <string name="menu_gallery_modelu">Модуль галлеря</string>
+    <string name="menu_galley">Галлерея</string>
+    <string name="btn_upload_label">Загрузить картинку</string>
 </resources>

@@ -167,7 +167,9 @@ class AuthPage : Fragment() {
         if (user != null) {
 
 
+            sidebar.menu.findItem(R.id.gallery_module).isVisible = false
             sidebar.menu.findItem(R.id.authPage).isVisible = false
+
             sidebar.menu.findItem(R.id.listPage).isVisible = true
             //ссылка на навигационный контроллер
             val navController = NavHostFragment.findNavController(this)
