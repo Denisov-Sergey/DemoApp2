@@ -29,4 +29,6 @@
     <string name="menu_galley">Галлерея</string>
     <string name="btn_upload_label">Загрузить картинку</string>
     <string name="back_btn">Назад</string>
+    <string name="ed_comment">Комментарий</string>
+    <string name="btn_send">Отправить</string>
 </resources>

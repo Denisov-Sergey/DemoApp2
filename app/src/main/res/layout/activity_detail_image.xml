@@ -1,28 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".gallery_module.detailImage">
+    android:layout_height="wrap_content"
+    tools:context=".gallery_module.detailImage"
+    android:isScrollContainer="true">
+
 
     <ImageView
         android:id="@+id/iv_detail_img"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="350dp"
         android:foregroundGravity="top"
-        tools:ignore="MissingConstraints">
-    </ImageView>
+        tools:ignore="MissingConstraints"></ImageView>
 
     <Button
         android:id="@+id/btn_back_to_gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/abc_vector_test"
         android:elevation="10dp"
         android:text="@string/back_btn"
+        tools:ignore="MissingConstraints,PrivateResource"
         tools:layout_editor_absoluteX="5dp"
-        tools:targetApi="lollipop"
-        tools:ignore="PrivateResource" />
+        tools:targetApi="lollipop" />
+
+    <EditText
+        android:id="@+id/ed_post_to_image"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="@string/ed_comment"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toBottomOf="@+id/iv_detail_img"
+        tools:layout_editor_absoluteX="5dp" />
+
+    <Button
+        android:id="@+id/btn_postcomment"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/btn_send"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ed_post_to_image" />
+
+    <ListView
+        android:id="@+id/list_posts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/btn_postcomment"
+        tools:ignore="MissingConstraints"></ListView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

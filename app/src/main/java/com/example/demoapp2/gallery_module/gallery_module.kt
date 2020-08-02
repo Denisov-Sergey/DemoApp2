@@ -1,16 +1,13 @@
 package com.example.demoapp2.gallery_module
 
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Process
 import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -21,16 +18,11 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import com.example.demoapp2.MainActivity
 import com.example.demoapp2.R
-import com.example.demoapp2.data.GridAdapter
-import com.example.demoapp2.data.MessageAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.fragment_gallery_module.*
-import kotlinx.android.synthetic.main.fragment_gallery_module.view.*
 import java.io.ByteArrayOutputStream
 import java.util.*
-import java.util.zip.Inflater
 
 
 class gallery_module : Fragment() {
@@ -43,6 +35,7 @@ class gallery_module : Fragment() {
 
     private var galleryAdapter: GalleryModuleAdapter? = null
     private var imageArray: MutableList<Bitmap>? = null
+    private var imageIdArr: MutableList<String>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +46,8 @@ class gallery_module : Fragment() {
 
         //загрузка картинок из облака
         imageArray = mutableListOf()
+        imageIdArr = mutableListOf()
+
         GalleryFromCloud()
     }
 
@@ -68,8 +63,8 @@ class gallery_module : Fragment() {
 
         //els
         galleryAdapter = GalleryModuleAdapter( getActivity()!!.applicationContext, R.layout.module_grid, imageArray!! )
-
         fragmentLayout!!.findViewById<GridView>(R.id.grid_moduleGallery).adapter = galleryAdapter
+
 
         fragmentLayout!!.findViewById<GridView>(R.id.grid_moduleGallery).onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, selected ->
@@ -82,6 +77,8 @@ class gallery_module : Fragment() {
                 val byteArray = stream.toByteArray()
                 //
                 intent.putExtra(detailImage.IINTENT_BYTEARRAY, byteArray)
+
+                intent.putExtra(detailImage.IINTENT_IMAGEPATH, imageIdArr!![position])
                 startActivity(intent)
             }
         //
@@ -139,34 +136,9 @@ class gallery_module : Fragment() {
                     fragmentLayout!!.findViewById<ProgressBar>(R.id.pb_imgLoad).visibility = View.VISIBLE
                     selectedPhotoUri = data!!.data
 
-                    uploadImageToDB()
+                    uploadImageToDB(selectedPhotoUri)
 
-                    /* Это чтобы поставить в ImageView */
-                    try {
-                        selectedPhotoUri?.let {
-                            if(Build.VERSION.SDK_INT < 28) {
-                                val bitmap = MediaStore.Images.Media.getBitmap(
-                                    activity?.getContentResolver(),
-                                    selectedPhotoUri
-                                )
 
-                                imageArray!!.add(bitmap)
-                                galleryAdapter!!.notifyDataSetChanged()
-                                //iv_gallery.setImageBitmap(bitmap)
-                            } else {
-                                val source = ImageDecoder.createSource(getActivity()?.getContentResolver()!!,
-                                    selectedPhotoUri!!
-                                )
-                                val bitmap = ImageDecoder.decodeBitmap(source)
-                                imageArray!!.add(bitmap)
-                                galleryAdapter!!.notifyDataSetChanged()
-                                //iv_gallery.setImageBitmap(bitmap)
-                            }
-
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
 
                 }
                 else ->
@@ -175,16 +147,47 @@ class gallery_module : Fragment() {
         }
     }
 
-    private fun uploadImageToDB() {
-        if (selectedPhotoUri == null) return
+    private fun uploadImageToDB(selectedPhotoUri: Uri?) {
+        if (this.selectedPhotoUri == null) return
 
         val filename = UUID.randomUUID().toString()
-        Log.d(TAG, "Upload image uri $selectedPhotoUri name $filename")
+        Log.d(TAG, "Upload image uri ${this.selectedPhotoUri} name $filename")
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
 
-        ref.putFile(selectedPhotoUri!!)
+        ref.putFile(this.selectedPhotoUri!!)
             .addOnSuccessListener {
                 Log.d(TAG, "Success load image ${it.metadata?.path}")
+
+                val path = it.metadata?.path.toString()
+                /* Это чтобы поставить в ImageView */
+                try {
+                    selectedPhotoUri?.let {
+                        if(Build.VERSION.SDK_INT < 28) {
+                            val bitmap = MediaStore.Images.Media.getBitmap(
+                                activity?.getContentResolver(),
+                                selectedPhotoUri
+                            )
+
+                            imageArray!!.add(bitmap)
+                            galleryAdapter!!.notifyDataSetChanged()
+                            imageIdArr!!.add(path)
+                            //iv_gallery.setImageBitmap(bitmap)
+                        } else {
+                            val source = ImageDecoder.createSource(getActivity()?.getContentResolver()!!,
+                                selectedPhotoUri!!
+                            )
+                            val bitmap = ImageDecoder.decodeBitmap(source)
+                            imageArray!!.add(bitmap)
+                            galleryAdapter!!.notifyDataSetChanged()
+                            imageIdArr!!.add(path)
+                            //iv_gallery.setImageBitmap(bitmap)
+                        }
+
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
 
                 ref.downloadUrl.addOnSuccessListener {
                     //it.toString()
@@ -207,8 +210,9 @@ class gallery_module : Fragment() {
 
                 listResult.items.forEach { item ->
                     //item.path
-                    Log.d(TAG, "item of Gallery ${item.path}")
+                    Log.d(TAG, "item of Gallery ${item.path} ${item.metadata}")
                     includesForDownloadFiles(item.path)
+                    //imageIdArr!!.add(item.path)
 
                 }
             }
@@ -228,6 +232,8 @@ class gallery_module : Fragment() {
             // приходит значение в байтах надо преобразовать их
             val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
             imageArray!!.add(bmp)
+            imageIdArr!!.add(path)
+
             galleryAdapter!!.notifyDataSetChanged()
 
         }.addOnFailureListener {
